@@ -100,7 +100,7 @@ self.addEventListener('activate', e => {
     if (await c.match('index.html')) {
       // DEVICE_CACHE holds this browser's device id (the push re-register below needs it): not a
       // build, so an update never sweeps it.
-      const old = (await caches.keys()).filter(k => k !== CACHE && k !== MEDIA && k !== DEVICE_CACHE)
+      const old = (await caches.keys()).filter(k => k !== CACHE && (k.startsWith('opengym-rt-') || k.startsWith('fitness-cardbook-v')))
       // A build from before MEDIA existed kept its media in its own cache: move it across first,
       // so the first update to this worker does not cost what the device already had offline.
       await Promise.all(old.map(k => adoptMedia(k).catch(() => {})))

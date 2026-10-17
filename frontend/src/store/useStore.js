@@ -1912,7 +1912,7 @@ export const useStore = create((set, get) => {
       }
       // Demo build (GitHub Pages): no backend at all — seed once, stay in guest mode.
       if (DEMO) {
-        if (!localStorage.getItem(DEMO_SEEDED)) {
+        if (import.meta.env.VITE_PERSONAL !== '1' && !localStorage.getItem(DEMO_SEEDED)) {
           localStorage.setItem(DEMO_SEEDED, '1')
           await get().resetDemo()
         }

@@ -212,12 +212,14 @@ describe('sw.js re-registers a rotated push subscription with the page\'s device
     await loadSW()
     await previousBuild()
     await (await globalThis.caches.open(DEVICE_CACHE)).put(DEVICE_URL, new Response('dev1234abcd'))
+    await globalThis.caches.open('fitness-cardbook-v6')
+    await globalThis.caches.open('another-personal-app')
     globalThis.fetch = async u => (String(u) === 'index.html'
       ? { ok: true, status: 200, redirected: false, text: async () => shellHtml }
       : { ok: true, status: 200, clone: () => ({}) })
     await fire('install')
     await fire('activate')
-    expect((await globalThis.caches.keys()).sort()).toEqual([CACHE, DEVICE_CACHE].sort())
+    expect((await globalThis.caches.keys()).sort()).toEqual([CACHE, DEVICE_CACHE, 'another-personal-app'].sort())
     expect(await (await (await globalThis.caches.open(DEVICE_CACHE)).match(DEVICE_URL)).text()).toBe('dev1234abcd')
   })
 })

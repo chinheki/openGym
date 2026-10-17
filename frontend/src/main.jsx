@@ -7,6 +7,9 @@ import { startMediaSync } from './lib/media-sync.js'
 import { startNativeKeyboard } from './lib/native-keyboard.js'
 import './index.css'
 
+// Personal Pages fork uses local state without seeding example workouts.
+if(import.meta.env.VITE_PERSONAL === '1' && !localStorage.getItem('gym_state_v1')){useStore.getState().update(s=>{s.lang='zh';s.theme='light'});}
+
 // App.jsx restores per-route scroll itself; the browser's own attempt races it.
 if ('scrollRestoration' in history) history.scrollRestoration = 'manual'
 
@@ -23,7 +26,7 @@ startMediaSync(useStore)
 startNativeKeyboard()
 
 // Not in the mobile build: the native shell already serves everything from disk.
-if (!MOBILE && 'serviceWorker' in navigator && location.protocol === 'https:') {
+if (!MOBILE && 'serviceWorker' in navigator && (location.protocol === 'https:' || location.hostname === '127.0.0.1' || location.hostname === 'localhost')) {
   navigator.serviceWorker.register('sw.js').catch(() => {})
   // The plan's exercise media, kept by the worker for a workout opened without a network (#281).
   // It only fetches ahead while the page runs as the installed app; a tab keeps what it has shown.

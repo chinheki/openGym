@@ -29,6 +29,7 @@ import TimerFlash from './components/TimerFlash.jsx'
 import { openDeviceLinkRedeem } from './components/Passkeys.jsx'
 import Login from './views/Login.jsx'
 import MobileOnboarding from './views/MobileOnboarding.jsx'
+import Cardbook from './views/Cardbook.jsx'
 import Home from './views/Home.jsx'
 import CheckIn from './views/CheckIn.jsx'
 import Plan from './views/Plan.jsx'
@@ -204,6 +205,7 @@ function Shell() {
         <ErrorBoundary>
           {!authed ? <Login /> : needsMobileOnboarding ? <MobileOnboarding /> : (
             <Routes>
+              <Route path="/cardbook" element={<Cardbook />} />
               <Route path="/home" element={<Home />} />
               {/* Gym check-in — switched off in Settings, the route falls through to the
                   catch-all redirect below. */}
@@ -228,7 +230,7 @@ function Shell() {
               <Route path="/coach/proposal" element={<Navigate to="/coach" replace />} />
               <Route path="/coach/setup" element={<CoachSetup />} />
               <Route path="/admin" element={user?.admin ? <Admin /> : <Navigate to="/home" replace />} />
-              <Route path="*" element={<Navigate to="/home" replace />} />
+              <Route path="*" element={<Navigate to={import.meta.env.VITE_PERSONAL === '1'?'/cardbook':'/home'} replace />} />
             </Routes>
           )}
         </ErrorBoundary>

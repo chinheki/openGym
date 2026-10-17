@@ -856,6 +856,9 @@ export default function Settings({ page = null, find = null, via = null }) {
           <Row icon="cloud" iconTint="var(--indigo)" title={t('Connect to my server')} subtitle={t('Sync this device to your own self-hosted openGym instead.')} accessory="chevron"
             onClick={connectServer} />
           <KeptChangesRows />
+        </> : import.meta.env.VITE_PERSONAL === '1' ? <>
+          <Row icon="info" title="个人本地模式" subtitle="数据保存在这台设备；请定期备份。原卡册及其完整备份在「我的卡册 → 设置」。" />
+          <Row icon="dumbbell" title="我的卡册与旧存档" accessory="chevron" onClick={() => nav('/cardbook')} />
         </> : DEMO ? <>
           <Row icon="info" iconTint="var(--acc)" title={t('You’re in the demo')} subtitle={t('Example data, stored only in this browser. Go wild and change anything you like.')} />
           <Row icon="reset" iconTint="var(--blue)" title={t('Reset demo data')} accessory="chevron"
@@ -927,7 +930,7 @@ function SettingsRoot({ ctx, preview, open, user, sync, home, go }) {
   const set = v => { lastQuery = { q: v, key }; setQ(v) }
   const hits = q.trim() ? searchSettings(q, ctx) : null
   // The account card: who this is, and the one line that matters about it.
-  const acct = DEMO ? { title: t('Demo'), sub: t('Example data, only in this browser.') }
+  const acct = DEMO ? { title: import.meta.env.VITE_PERSONAL === '1'?'个人本地模式':t('Demo'), sub: import.meta.env.VITE_PERSONAL === '1'?'原卡册、内置动作与个人收藏':t('Example data, only in this browser.') }
     : user ? {
       title: user.name || t('Account'),
       sub: sync && sync.status && sync.status !== 'ok' ? t('Sync needs a look') : MOBILE ? t('Synced with your server') : t('Account, devices and sync'),

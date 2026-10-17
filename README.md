@@ -1,3 +1,5 @@
+> **个人非商业分支：** 已整合健身卡册、多图裁剪、自动标签、内置动作与个人收藏混合随机及旧存档继承。部署在原 [健身卡册地址](https://chinheki.github.io/fitness-cardbook/)。详见 [个人版说明](docs/PERSONAL-CARDBOOK.md)。下方保留上游说明；本分支的 GitHub Pages 使用本地模式，无远程账号服务。
+
 <div align="center">
 
 <img src="assets/banner.png" alt="openGym" width="720">

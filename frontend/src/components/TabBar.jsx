@@ -61,6 +61,7 @@ export default function TabBar({ onStart }) {
       </button>
       <Tab active={on('stats')} icon="chart" label={t('Stats')} onClick={() => nav('/stats')} />
       <Tab active={on('library')} icon="dumbbell" label={t('Exercises')} onClick={() => nav('/library')} />
+      <Tab active={on('cardbook')} icon="dumbbell" label="我的卡册" onClick={() => nav('/cardbook')} />
     </nav>
   )
 }

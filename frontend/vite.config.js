@@ -67,7 +67,7 @@ const swStamp = {
   name: 'opengym-sw-stamp',
   apply: 'build',
   configResolved(config) { outDir = resolve(config.root, config.build.outDir) },
-  generateBundle(_, bundle) { lazy = lazyAssets(bundle) },
+  generateBundle(_, bundle) { lazy = [...lazyAssets(bundle), 'cardbook/index.html','cardbook/app.js','cardbook/db.js','cardbook/logic.js','cardbook/crop.js','cardbook/style.css','cardbook/catalogue.json','cardbook/vendor/cropperjs/cropper.min.js','cardbook/vendor/cropperjs/cropper.min.css'] },
   closeBundle() {
     const html = join(outDir, 'index.html'), sw = join(outDir, 'sw.js')
     if (!existsSync(html) || !existsSync(sw)) return

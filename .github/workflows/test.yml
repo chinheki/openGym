@@ -35,6 +35,9 @@ concurrency:
   group: test-${{ github.ref }}
   cancel-in-progress: true
 
+env:
+  TZ: UTC
+
 jobs:
   test:
     runs-on: ubuntu-latest
