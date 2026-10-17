@@ -850,7 +850,7 @@ export default function Settings({ page = null, find = null, via = null }) {
       </ServerSyncSection>}
 
       {/* account (demo and mobile builds have nothing to sign in to) */}
-      {!(MOBILE && user) && <Section title={MOBILE ? t('Your data') : DEMO ? t('Demo') : t('Account')}>
+      {!(MOBILE && user) && <Section title={MOBILE ? t('Your data') : DEMO ? (import.meta.env.VITE_PERSONAL === '1'?'个人本地模式':t('Demo')) : t('Account')}>
         {MOBILE ? <>
           <Row icon="lock" iconTint="var(--acc)" title={t('All data stays on this phone')} subtitle={t('No account, no cloud. Back it up anytime in Data & backup.')} />
           <Row icon="cloud" iconTint="var(--indigo)" title={t('Connect to my server')} subtitle={t('Sync this device to your own self-hosted openGym instead.')} accessory="chevron"
