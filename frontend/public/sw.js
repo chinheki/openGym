@@ -257,6 +257,10 @@ self.addEventListener('fetch', e => {
   if (e.request.method !== 'GET' || url.origin !== location.origin) return
   if (url.pathname.startsWith('/api/') || url.pathname.startsWith(API)) return    // never cache auth/data
 
+  if (url.pathname.endsWith('/version.json')) {
+    e.respondWith(fetch(e.request, {cache: 'no-store'}))
+    return
+  }
   if (isMediaPath(url.pathname)) {
     e.respondWith(media(e))
     return

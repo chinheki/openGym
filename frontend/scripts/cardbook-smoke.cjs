@@ -30,6 +30,16 @@ await page.waitForFunction(()=>JSON.parse(localStorage.getItem('gym_state_v1')).
 await page.reload();await frame.locator('.exercise').first().waitFor();data=await page.evaluate(()=>JSON.parse(localStorage.getItem('gym_state_v1')));assert.equal(data.customEx.length,2);assert.equal(data.workouts.length,2);
 // Re-importing a backup merges without dropping either original card or history.
 await frame.locator('[data-action="settings"]').click();
+await frame.locator('[data-action="check-update"]').click();await frame.getByRole('status').filter({hasText:'已经是最新版本'}).waitFor();
+await context.route('**/version.json?*',route=>route.fulfill({json:{version:'99.0.0'}}));
+await frame.locator('[data-action="check-update"]').click();await frame.locator('[data-action="apply-update"]').waitFor();
+await page.evaluate(()=>localStorage.setItem('fitness-cardbook.active','{}'));
+await frame.locator('[data-action="apply-update"]').click();await frame.locator('#toast').filter({hasText:'请先结束当前训练'}).waitFor();
+await page.evaluate(()=>localStorage.removeItem('fitness-cardbook.active'));
+await Promise.all([page.waitForEvent('framenavigated',{predicate:f=>f===page.mainFrame()}),frame.locator('[data-action="apply-update"]').click()]);await frame.locator('.exercise').first().waitFor();
+assert.equal((await page.evaluate(()=>JSON.parse(localStorage.getItem('gym_state_v1')))).customEx.length,2);
+await frame.locator('[data-action="settings"]').click();await context.unroute('**/version.json?*');
+await context.setOffline(true);await frame.locator('[data-action="check-update"]').click();await frame.getByRole('status').filter({hasText:/失败|fetch|network/i}).waitFor();await context.setOffline(false);
 const merged={format:'fitness-cardbook',version:1,cards:[{id:'merged-text',name:'合并文字',text:'导入文字动作',tags:['全身'],imageIds:[],createdAt:456}],images:[],sessions:[],settings:[]};
 for(let i=0;i<2;i++){await frame.locator('[data-action="merge-import"]').click();await frame.locator('#backup-input').setInputFiles({name:'old.json',mimeType:'application/json',buffer:Buffer.from(JSON.stringify(merged))});await frame.locator('.nav [data-action="add"]').waitFor();await frame.locator('[data-action="settings"]').click();}
 await page.waitForFunction(()=>JSON.parse(localStorage.getItem('gym_state_v1')).customEx.length===3,null,{timeout:20000});

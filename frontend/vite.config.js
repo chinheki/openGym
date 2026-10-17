@@ -67,11 +67,15 @@ const swStamp = {
   name: 'opengym-sw-stamp',
   apply: 'build',
   configResolved(config) { outDir = resolve(config.root, config.build.outDir) },
-  generateBundle(_, bundle) { lazy = [...lazyAssets(bundle), 'cardbook/index.html','cardbook/app.js','cardbook/db.js','cardbook/logic.js','cardbook/crop.js','cardbook/style.css','cardbook/catalogue.json','cardbook/vendor/cropperjs/cropper.min.js','cardbook/vendor/cropperjs/cropper.min.css'] },
+  generateBundle(_, bundle) { lazy = [...lazyAssets(bundle), 'cardbook/pwa-update.js','cardbook/index.html','cardbook/app.js','cardbook/db.js','cardbook/logic.js','cardbook/crop.js','cardbook/style.css','cardbook/catalogue.json','cardbook/vendor/cropperjs/cropper.min.js','cardbook/vendor/cropperjs/cropper.min.css'] },
   closeBundle() {
     const html = join(outDir, 'index.html'), sw = join(outDir, 'sw.js')
     if (!existsSync(html) || !existsSync(sw)) return
-    const stamp = createHash('sha256').update(readFileSync(html)).digest('hex').slice(0, 10)
+    const cardbook = join(outDir, 'cardbook/pwa-update.js')
+    const stamp = createHash('sha256').update(readFileSync(html)).update(readFileSync(join(outDir, 'cardbook/app.js'))).update(readFileSync(cardbook)).digest('hex').slice(0, 10)
+    const version = `${appVersion} · ${stamp}`
+    writeFileSync(cardbook, readFileSync(cardbook, 'utf8').replace('__CARDBOOK_VERSION__', version))
+    writeFileSync(join(outDir, 'version.json'), JSON.stringify({version}))
     writeFileSync(sw, stampSw(readFileSync(sw, 'utf8'), { stamp, lazy }))
   }
 }
